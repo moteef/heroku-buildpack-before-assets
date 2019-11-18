@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+BP_DIR=$(cd $(dirname ${0:-}); cd ..; pwd)
+
+ASSET_HOST=$(cat $ENV_DIR/ASSET_HOST)
+if [[ -z "$ASSET_HOST" ]]; then
+  echo "-----> Skipping ASSET_PATH setter"
+  exit 0
+fi
+
+ASSET_PATH=/${SOURCE_VERSION}
+# For asset compilation in the next buildpack
+echo "export ASSET_PATH=${ASSET_PATH}" > $BP_DIR/export
+# For Rails
+echo "export ASSET_PATH=${ASSET_PATH}" > $BUILD_DIR/.profile.d/before-assets.sh
+
+echo "-----> Set ASSET_PATH to ${ASSET_PATH}"
