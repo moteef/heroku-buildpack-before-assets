@@ -11,8 +11,13 @@ if [[ -z "$ASSET_HOST" ]]; then
   exit 0
 fi
 
-ver=$(echo $SOURCE_VERSION | cut -c1-8)
-ASSET_PATH=/v/$ver
+if [ -f $BUILD_DIR/.asset_path ]; then
+  ASSET_PATH=$(cat $BUILD_DIR/.asset_path)
+else
+  ver=$(echo $SOURCE_VERSION | cut -c1-8)
+  ASSET_PATH=/v/$ver
+fi
+
 # For asset compilation in the next buildpack
 echo "export ASSET_PATH=${ASSET_PATH}" > $BP_DIR/export
 # For Rails
